@@ -53,6 +53,9 @@ content/
       index.mdx
       cover.jpg
       images/
+    co-ops/
+      index.mdx             # Combined page for early career co-ops & internships
+      images/               # Any photos from these roles (optional)
   projects/
     some-project/
       index.mdx             # Project write-up
@@ -90,6 +93,20 @@ featured: true
 order: 1
 ---
 ```
+
+The co-ops page uses the same schema but covers multiple roles in the MDX body:
+```yaml
+---
+title: "Early Career"
+subtitle: "Co-ops & Internships"
+role: "Mechanical Engineering Co-ops & Operations Intern"
+timeframe: "2008–2011"
+cover: "./cover.jpg"
+featured: false
+order: 3
+---
+```
+Body content uses headings for each role: Philips Color Kinetics (2011), L-3 Communications (2010), Ocular Therapeutix (2009), Hitchiner Manufacturing (2008).
 
 **Project entries:**
 ```yaml
