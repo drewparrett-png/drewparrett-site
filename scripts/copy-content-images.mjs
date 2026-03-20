@@ -1,35 +1,27 @@
-#!/usr/bin/env node
-/**
- * Copies images from content directories to public/images
- * so they can be served statically by Next.js.
- */
+import fs from "fs";
+import path from "path";
 
-import { cpSync, mkdirSync, existsSync, readdirSync, statSync } from "fs";
-import { join, extname } from "path";
+const contentDir = path.join(process.cwd(), "content");
+const publicDir = path.join(process.cwd(), "public", "content");
 
-const CONTENT_DIR = join(process.cwd(), "content");
-const PUBLIC_IMAGES_DIR = join(process.cwd(), "public", "images");
-
-const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".gif", ".webp", ".avif", ".svg"]);
-
-function copyImages(srcDir, destDir) {
-  if (!existsSync(srcDir)) return;
-
-  const entries = readdirSync(srcDir);
+function copyImages(src, dest) {
+  if (!fs.existsSync(src)) return;
+  const entries = fs.readdirSync(src, { withFileTypes: true });
   for (const entry of entries) {
-    const srcPath = join(srcDir, entry);
-    const stat = statSync(srcPath);
-
-    if (stat.isDirectory()) {
-      copyImages(srcPath, join(destDir, entry));
-    } else if (IMAGE_EXTENSIONS.has(extname(entry).toLowerCase())) {
-      mkdirSync(destDir, { recursive: true });
-      cpSync(srcPath, join(destDir, entry));
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyImages(srcPath, destPath);
+    } else if (/\.(jpg|jpeg|png|webp|gif|svg)$/i.test(entry.name)) {
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.copyFileSync(srcPath, destPath);
     }
   }
 }
 
-mkdirSync(PUBLIC_IMAGES_DIR, { recursive: true });
-copyImages(CONTENT_DIR, PUBLIC_IMAGES_DIR);
-
-console.log("Content images copied to public/images/");
+// Clean and recopy
+if (fs.existsSync(publicDir)) {
+  fs.rmSync(publicDir, { recursive: true });
+}
+copyImages(contentDir, publicDir);
+console.log("Copied content images to public/content/");
