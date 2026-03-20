@@ -1,12 +1,87 @@
+import { HomepageGrid } from "@/components/homepage-grid";
+import { getContentItems } from "@/lib/content";
+import type {
+  WorkFrontmatter,
+  ProjectFrontmatter,
+  PhotographyFrontmatter,
+  FeaturedItem,
+} from "@/lib/types";
+
+function getFeaturedItems(): FeaturedItem[] {
+  const work = getContentItems<WorkFrontmatter>("work")
+    .filter((w) => w.frontmatter.featured)
+    .sort((a, b) => a.frontmatter.order - b.frontmatter.order)
+    .map((w) => ({
+      type: "work" as const,
+      slug: w.slug,
+      title: w.frontmatter.title,
+      subtitle: w.frontmatter.subtitle,
+      cover: `/content/work/${w.slug}/${w.frontmatter.cover.replace("./", "")}`,
+      href: `/work/${w.slug}`,
+    }));
+
+  const projects = getContentItems<ProjectFrontmatter>("projects")
+    .filter((p) => p.frontmatter.featured)
+    .sort(
+      (a, b) =>
+        new Date(b.frontmatter.date).getTime() -
+        new Date(a.frontmatter.date).getTime()
+    )
+    .map((p) => ({
+      type: "project" as const,
+      slug: p.slug,
+      title: p.frontmatter.title,
+      description: p.frontmatter.description,
+      cover: `/content/projects/${p.slug}/${p.frontmatter.cover.replace("./", "")}`,
+      href: `/projects/${p.slug}`,
+    }));
+
+  const photography = getContentItems<PhotographyFrontmatter>("photography")
+    .sort(
+      (a, b) =>
+        new Date(b.frontmatter.date).getTime() -
+        new Date(a.frontmatter.date).getTime()
+    )
+    .slice(0, 2)
+    .map((p) => ({
+      type: "photography" as const,
+      slug: p.slug,
+      title: p.frontmatter.title,
+      description: p.frontmatter.description,
+      cover: `/content/photography/${p.slug}/${p.frontmatter.cover.replace("./", "")}`,
+      href: `/photography/${p.slug}`,
+    }));
+
+  const items: FeaturedItem[] = [];
+  if (work.length > 0) items.push(work[0]);
+
+  const others = [...projects, ...photography].sort((a, b) => {
+    const typeOrder = { project: 0, photography: 1 };
+    const aOrder = typeOrder[a.type as keyof typeof typeOrder] ?? 2;
+    const bOrder = typeOrder[b.type as keyof typeof typeOrder] ?? 2;
+    return aOrder - bOrder;
+  });
+  items.push(...others);
+  items.push(...work.slice(1));
+
+  return items;
+}
+
 export default function Home() {
+  const featured = getFeaturedItems();
+
   return (
-    <main className="max-w-5xl mx-auto px-6 py-20">
-      <h1 className="text-5xl font-bold tracking-tight">
-        Engineering Leader & Maker
+    <div className="max-w-5xl mx-auto px-6 py-16">
+      <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
+        Engineering
+        <br />
+        Leader & Maker
       </h1>
-      <p className="mt-4 text-[var(--muted)] max-w-lg">
-        14 years building products and teams. Hardware, software, and everything in between.
+      <p className="mt-4 text-[var(--muted)] max-w-lg leading-relaxed">
+        14 years building products and teams at Lumafield and Cognex. Hardware,
+        software, and everything in between.
       </p>
-    </main>
+      <HomepageGrid items={featured} />
+    </div>
   );
 }
