@@ -73,13 +73,13 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
       <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
-        Engineering
+        Product Leader
         <br />
-        Leader & Maker
+        & Maker
       </h1>
       <p className="mt-4 text-[var(--muted)] max-w-lg leading-relaxed">
-        14 years building products and teams at Lumafield and Cognex. Hardware,
-        software, and everything in between.
+        14 years building products and teams at Lumafield and Cognex.
+        Hardware, software, and everything in between.
       </p>
       <HomepageGrid items={featured} />
     </div>
