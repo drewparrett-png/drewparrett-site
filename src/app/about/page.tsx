@@ -35,8 +35,7 @@ export default function AboutPage() {
       </div>
       <div className="flex gap-4 mt-10 text-sm">
         <a href="https://www.linkedin.com/in/andrewparrett/" target="_blank" rel="noopener noreferrer" className="text-[var(--muted)] hover:text-white transition-colors">LinkedIn</a>
-        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--muted)] hover:text-white transition-colors">Instagram</a>
-        <a href="mailto:drew@drewparrett.com" className="text-[var(--muted)] hover:text-white transition-colors">Email</a>
+        <a href="mailto:drew.parrett@gmail.com" className="text-[var(--muted)] hover:text-white transition-colors">Email</a>
       </div>
       {frontmatter.resumeLink && (
         <a
