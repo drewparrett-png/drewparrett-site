@@ -42,7 +42,7 @@ function getFeaturedItems(): FeaturedItem[] {
         new Date(b.frontmatter.date).getTime() -
         new Date(a.frontmatter.date).getTime()
     )
-    .slice(0, 2)
+    .slice(0, 1)
     .map((p) => ({
       type: "photography" as const,
       slug: p.slug,
