@@ -47,26 +47,38 @@ export interface ProjectFrontmatter {
   featured: boolean;
   // New optional fields for rich project pages:
   parentWork?: string;        // Slug of parent work page, e.g., "lumafield"
+  parentWorkTitle?: string;   // Display title, e.g., "Lumafield" (avoids runtime content lookups)
   externalUrl?: string;       // e.g., "https://scanofthemonth.com"
   metrics?: Array<{ value: string; label: string }>;  // Up to 3
   relatedProject?: string;    // Slug of related project for footer cross-link
-  order?: number;             // For controlling listing page order
+  relatedProjectTitle?: string; // Display title, e.g., "Scan of the Month"
 }
 ```
 
-CallFrame continues to work unchanged — the new fields are all optional.
+CallFrame continues to work unchanged — the new fields are all optional. The `tags` field becomes optional (`tags?: string[]`) since new project pages do not use tags. The project detail page must guard against undefined tags (use `frontmatter.tags?.map(...)` or similar).
 
-### New ProjectHero Component
+### New ProjectHero Component (`src/components/project-hero.tsx`)
 
-A new `ProjectHero` component renders the hero block, metrics bar, and context line. It reads from frontmatter. If `metrics` is absent, the metrics bar is not rendered (graceful fallback for CallFrame and any project without metrics). If `parentWork` is absent, the context line is not rendered.
+Accepts the full `ProjectFrontmatter` object as props. Renders:
+- Title and description (as subtitle)
+- Context line: "Part of my work at {parentWorkTitle}" linking to `/work/{parentWork}` — only if `parentWork` is set
+- External link: "{externalUrl}" rendered as a text link with arrow icon — only if `externalUrl` is set
+- Metrics bar: up to 3 stat cards from `metrics` array — only if `metrics` is set and non-empty
 
-### Project Footer Component
+### Project Footer Component (`src/components/project-footer.tsx`)
 
-A new `ProjectFooter` component renders "Back to Projects" and the related project link. It reads `relatedProject` from frontmatter to generate the cross-link. If absent, only "Back to Projects" renders.
+Accepts `relatedProject`, `relatedProjectTitle` as props. Renders:
+- "Back to Projects" link to `/projects`
+- "Read about {relatedProjectTitle}" link to `/projects/{relatedProject}` — only if `relatedProject` is set
 
 ### Project Detail Page
 
-The existing `/projects/[slug]/page.tsx` is updated to use `ProjectHero` and `ProjectFooter` when the extended fields are present. The MDX body renders between them. The page gracefully falls back to the current layout for projects without the new fields (i.e., CallFrame is untouched).
+The existing `/projects/[slug]/page.tsx` is updated:
+- If `metrics` or `parentWork` exist in frontmatter: render `ProjectHero` (replaces the current cover image + title + description + tags block)
+- If neither exists: render the current layout (cover image, title, description, tags) — CallFrame is untouched
+- MDX body renders in the middle regardless
+- `ProjectFooter` renders at the bottom for all projects (it gracefully shows only "Back to Projects" when no related project is set)
+- The `tags` rendering is guarded: `frontmatter.tags?.map(...)` to handle new projects that omit tags
 
 ### URL Structure / Slugs
 
@@ -82,13 +94,20 @@ New project content directories and their resulting URLs:
 
 ### Homepage Curation
 
-The current homepage uses `featured: true` flags and sorts work by `order`, projects by date, and takes top 2 photography items. To achieve the desired 5-item curated set:
+The current `getFeaturedItems()` in `src/app/page.tsx` assembles items as:
+1. First work item (large card)
+2. Projects + photography interleaved (projects first, then photography)
+3. Remaining work items
 
-- **Work items:** Already use `featured: true` + `order` field. Lumafield (order: 1) and Cognex (order: 2) are featured. No change needed.
-- **New projects:** Set `featured: true` only on Scan of the Month and CallFrame. The other 3 projects (3D-A1000, Launch, Patents) have `featured: false` — they appear on the Projects listing page but not the homepage.
-- **Photography:** Current logic takes top 2 by date. Reduce to top 1 to keep the homepage at 5 items total (2 work + 2 projects + 1 photography).
+Current result: `[Lumafield, CallFrame, Photo1, Photo2, Cognex]` (5 items)
 
-This achieves the curated set through the existing frontmatter flag mechanism without hardcoding.
+To achieve the desired curated set of 5:
+
+- **Work items:** No change. Lumafield (order: 1) and Cognex (order: 2) remain featured.
+- **New projects:** Set `featured: true` only on Scan of the Month and CallFrame. The other 3 projects have `featured: false`.
+- **Photography:** Reduce `.slice(0, 2)` to `.slice(0, 1)` in the homepage logic.
+
+Resulting order: `[Lumafield (large), SOTM, CallFrame, Photography, Cognex]` — 5 items. The interleave logic (projects sorted before photography) handles this correctly without rewriting the algorithm. If the project sort order needs adjustment (SOTM before CallFrame), set SOTM's `date` field to be more recent than CallFrame's, since projects sort by date descending.
 
 ## Project Pages
 
@@ -199,7 +218,7 @@ This is a content-editing task. The existing MDX files are rewritten (not increm
 
 ## About Page Enrichment
 
-**Replace the current `content/about.mdx` body entirely.** The frontmatter (title, photo, resumeLink) and the About page component (`src/app/about/page.tsx`) are unchanged. Only the MDX content body is rewritten.
+**Replace the current `content/about.mdx` body entirely.** The About page component (`src/app/about/page.tsx`) is unchanged. The frontmatter `title: "About"` stays. The optional `photo` and `resumeLink` frontmatter fields may be added if Drew provides a profile photo and resume PDF — this is a content task, not a code change.
 
 **Structure:**
 
