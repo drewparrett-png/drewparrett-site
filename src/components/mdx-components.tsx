@@ -1,6 +1,7 @@
 import { Callout } from "./callout";
 import { SideBySide } from "./side-by-side";
 import { ImageGallery } from "./image-gallery";
+import { ImageRow } from "./image-row";
 import type { MDXComponents } from "mdx/types";
 
 export function getMDXComponents(): MDXComponents {
@@ -44,5 +45,6 @@ export function getMDXComponents(): MDXComponents {
     Callout,
     SideBySide,
     ImageGallery,
+    ImageRow,
   };
 }
