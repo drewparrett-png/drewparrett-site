@@ -78,8 +78,7 @@ export default function Home() {
         & Maker
       </h1>
       <p className="mt-4 text-[var(--muted)] max-w-lg leading-relaxed">
-        14 years building products and teams at Lumafield and Cognex.
-        Hardware, software, and everything in between.
+        Products, teams, and go-to-market — from first prototype to first $10M.
       </p>
       <HomepageGrid items={featured} />
     </div>
