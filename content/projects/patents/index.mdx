@@ -1,0 +1,39 @@
+---
+title: "Patents"
+description: "4 U.S. patents in optics and 3D algorithms"
+date: "2019-06-01"
+cover: "./cover.png"
+featured: false
+parentWork: "cognex"
+parentWorkTitle: "Cognex"
+relatedProject: "3d-a1000"
+relatedProjectTitle: "3D-A1000"
+---
+
+## Overview
+
+Industrial 3D vision is full of problems that look simple until you're building hardware that ships to freezing warehouses, hot assembly lines, and vibrating factory floors. Making a camera that measures parts accurately under those conditions requires solving hard problems in optics, illumination, and signal processing — often within tight cost and compute constraints. I was named inventor on 4 U.S. patents that came out of that work on the [3D-A1000](/projects/3d-a1000) and related camera systems at Cognex, covering everything from passive optical mounting to embedded stitching algorithms.
+
+### Passively Athermal Optical Mounting
+
+U.S. Patent _(number to be added)_
+
+Industrial cameras operate across wide temperature ranges — a camera might be installed in a freezer warehouse one day and a hot stamping line the next. As temperatures shift, most mounting materials expand or contract at different rates, causing optical elements to drift out of alignment. This patent covers a mounting design that uses the differential thermal expansion of the mounting materials themselves to cancel out that drift, keeping optics aligned across temperature extremes with no motors, sensors, or active compensation required.
+
+### Laser Despeckling Method
+
+U.S. Patent _(number to be added)_
+
+Structured light 3D cameras project laser patterns onto objects to reconstruct geometry, but lasers produce speckle — a grainy interference pattern that appears on the image sensor and degrades measurement accuracy. Higher laser power improves signal-to-noise ratio in principle, but typically makes speckle worse. This patent covers a method that reduces speckle noise while simultaneously allowing higher laser power through the system, improving both image quality and measurement accuracy without additional hardware.
+
+### Low-Compute 3D Stitching Algorithm
+
+U.S. Patent _(number to be added)_
+
+Many 3D cameras capture multiple partial views that need to be combined into a single coherent point cloud — a process called stitching. Most stitching approaches are computationally expensive and assume a capable host processor. This patent covers an algorithm designed to run on the camera's own embedded hardware in real time, with low computational overhead. The goal was to keep stitching on-device so the camera could output a finished measurement rather than offloading raw data to a host for post-processing.
+
+### Composite 3D Blob Tool Algorithm
+
+U.S. Patent _(number to be added)_
+
+Point cloud data from 3D cameras is only useful if software can reliably identify and measure features within it. This patent covers a method for detecting and characterizing 3D blobs — discrete objects or features — in point cloud data, compositing measurements across multiple scans to improve robustness. The algorithm was developed for logistics applications where cameras need to dimension and characterize packages reliably at high throughput, even when objects vary widely in size, shape, and surface properties.
