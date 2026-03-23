@@ -31,16 +31,75 @@ drewparrett.com
 
 **Navigation:** Work / Projects / Photography / About
 
+## Technical Approach
+
+### Extended ProjectFrontmatter
+
+The existing `ProjectFrontmatter` type (`title`, `description`, `cover`, `date`, `tags`, `featured`) is extended with optional fields for the new rich project pages:
+
+```typescript
+export interface ProjectFrontmatter {
+  title: string;
+  description: string;       // Used as subtitle on detail page AND card description on listing page
+  cover: string;
+  date: string;
+  tags: string[];
+  featured: boolean;
+  // New optional fields for rich project pages:
+  parentWork?: string;        // Slug of parent work page, e.g., "lumafield"
+  externalUrl?: string;       // e.g., "https://scanofthemonth.com"
+  metrics?: Array<{ value: string; label: string }>;  // Up to 3
+  relatedProject?: string;    // Slug of related project for footer cross-link
+  order?: number;             // For controlling listing page order
+}
+```
+
+CallFrame continues to work unchanged — the new fields are all optional.
+
+### New ProjectHero Component
+
+A new `ProjectHero` component renders the hero block, metrics bar, and context line. It reads from frontmatter. If `metrics` is absent, the metrics bar is not rendered (graceful fallback for CallFrame and any project without metrics). If `parentWork` is absent, the context line is not rendered.
+
+### Project Footer Component
+
+A new `ProjectFooter` component renders "Back to Projects" and the related project link. It reads `relatedProject` from frontmatter to generate the cross-link. If absent, only "Back to Projects" renders.
+
+### Project Detail Page
+
+The existing `/projects/[slug]/page.tsx` is updated to use `ProjectHero` and `ProjectFooter` when the extended fields are present. The MDX body renders between them. The page gracefully falls back to the current layout for projects without the new fields (i.e., CallFrame is untouched).
+
+### URL Structure / Slugs
+
+New project content directories and their resulting URLs:
+
+| Project | Directory | URL |
+|---------|-----------|-----|
+| Scan of the Month | `content/projects/scan-of-the-month/` | `/projects/scan-of-the-month` |
+| 3D-A1000 | `content/projects/3d-a1000/` | `/projects/3d-a1000` |
+| Lumafield Launch | `content/projects/lumafield-launch/` | `/projects/lumafield-launch` |
+| Patents | `content/projects/patents/` | `/projects/patents` |
+| CallFrame | `content/projects/callframe/` (existing) | `/projects/callframe` |
+
+### Homepage Curation
+
+The current homepage uses `featured: true` flags and sorts work by `order`, projects by date, and takes top 2 photography items. To achieve the desired 5-item curated set:
+
+- **Work items:** Already use `featured: true` + `order` field. Lumafield (order: 1) and Cognex (order: 2) are featured. No change needed.
+- **New projects:** Set `featured: true` only on Scan of the Month and CallFrame. The other 3 projects (3D-A1000, Launch, Patents) have `featured: false` — they appear on the Projects listing page but not the homepage.
+- **Photography:** Current logic takes top 2 by date. Reduce to top 1 to keep the homepage at 5 items total (2 work + 2 projects + 1 photography).
+
+This achieves the curated set through the existing frontmatter flag mechanism without hardcoding.
+
 ## Project Pages
 
 ### Shared Structure
 
 All project pages follow a consistent layout:
 
-- **Hero block:** Title, subtitle (one-line value prop), context line linking back to the parent Work page, external link if applicable
-- **Metrics bar:** 3 key stats displayed prominently
-- **Story sections:** 2-5 narrative sections, each 2-4 short paragraphs
-- **Footer:** Back to Projects, related project cross-link
+- **Hero block:** Title, description (as subtitle), context line linking back to `parentWork`, external link if `externalUrl` is set
+- **Metrics bar:** Up to 3 stats from `metrics` frontmatter, displayed prominently. If fewer than 3 metrics are available, render what exists.
+- **Story sections:** 2-5 narrative sections in MDX body, each 2-4 short paragraphs
+- **Footer:** `ProjectFooter` component — "Back to Projects" + related project link from `relatedProject`
 
 Each project page is fully self-contained — a cold visitor with no context can understand what they are reading.
 
@@ -90,7 +149,7 @@ Each project page is fully self-contained — a cold visitor with no context can
 **Metrics bar:**
 - Stealth to Public launch campaign
 - Full GTM built from scratch
-- (Third metric TBD — tradeshow results or lead gen numbers)
+- (Third metric TBD — Drew to provide tradeshow results or lead gen number. If unavailable at implementation time, render 2 metrics only — the component handles this gracefully.)
 
 **Sections:**
 1. **The Opportunity** — What Lumafield was, why Drew joined, the challenge on day one.
@@ -118,19 +177,29 @@ Each project page is fully self-contained — a cold visitor with no context can
 
 ## Work Page Changes
 
-### Lumafield Work Page
+This is a content-editing task. The existing MDX files are rewritten (not incrementally edited) to become role narratives with cross-links. The frontmatter and page template for Work pages do not change.
 
-Slim down. Remove deep project detail for Scan of the Month and the Launch. Replace with:
-- 2-3 sentences describing each project in the context of the role
-- Clear link: "Read the full Scan of the Month story" / "Read about the Lumafield Launch"
+### Lumafield Work Page (`content/work/lumafield/index.mdx`)
 
-The role narrative stays intact: what Drew was hired to do, how he grew, what he owned. The page reads like a strong role summary; the project pages handle the depth.
+**Replace the current MDX body** with a role-focused narrative. The new content:
+- Keeps the overall arc: stealth startup to scaled product org
+- Keeps sections on Neptune platform, team scaling, and role growth
+- Replaces the deep Scan of the Month section with 2-3 sentences + link: "Read the full Scan of the Month story →" pointing to `/projects/scan-of-the-month`
+- Replaces the deep launch narrative with 2-3 sentences + link: "Read about the Lumafield Launch →" pointing to `/projects/lumafield-launch`
+- Frontmatter unchanged
 
-### Cognex Work Page
+### Cognex Work Page (`content/work/cognex/index.mdx`)
 
-Same treatment. Remove deep project detail for 3D-A1000 and Patents. Replace with brief mentions and cross-links.
+**Replace the current MDX body** with a role-focused narrative. The new content:
+- Keeps the overall arc: nine-year career from engineer to product leader
+- Keeps sections on opto-mechanical engineering background, NPI management
+- Replaces the deep 3D-A1000 section with 2-3 sentences + link pointing to `/projects/3d-a1000`
+- Replaces the deep patents section with 2-3 sentences + link pointing to `/projects/patents`
+- Frontmatter unchanged
 
 ## About Page Enrichment
+
+**Replace the current `content/about.mdx` body entirely.** The frontmatter (title, photo, resumeLink) and the About page component (`src/app/about/page.tsx`) are unchanged. Only the MDX content body is rewritten.
 
 **Structure:**
 
