@@ -57,19 +57,53 @@ export interface ProjectFrontmatter {
 
 CallFrame continues to work unchanged — the new fields are all optional. The `tags` field becomes optional (`tags?: string[]`) since new project pages do not use tags. The project detail page must guard against undefined tags (use `frontmatter.tags?.map(...)` or similar).
 
+### Visual Design Guidelines
+
+All new components follow the existing site design system:
+
+**Design tokens (CSS variables):**
+- `--background`: #0a0a0a (page bg)
+- `--foreground`: #ffffff (primary text)
+- `--muted`: #888888 (secondary text, descriptions)
+- `--border`: #222222 (dividers)
+- `--card`: #161616 (card/surface bg)
+- `--label-project`: #60a5fa (blue accent for project elements)
+- `--label-work`: #4ade80 (green accent for work cross-links)
+
+**Typography patterns to follow:**
+- Page titles: `text-4xl font-bold tracking-tight` (matches existing work/project detail pages)
+- Subtitles: `text-lg text-[var(--muted)]` (matches existing project description)
+- Small labels/meta: `text-xs uppercase tracking-widest text-[var(--muted)]` (matches homepage section headers)
+- Body text in MDX: `prose-invert` class handles this automatically
+
+**Spacing patterns:**
+- Detail page container: `max-w-4xl mx-auto px-6 py-16`
+- Content gap after header: `mt-10` before MDX body
+- Section spacing: `mt-8` / `mb-4` (matches MDX h2 spacing)
+
+**Interaction patterns:**
+- Links: `text-white underline underline-offset-4 hover:text-[var(--label-project)] transition-colors`
+- No button components exist — the site uses text links throughout
+
 ### New ProjectHero Component (`src/components/project-hero.tsx`)
 
 Accepts the full `ProjectFrontmatter` object as props. Renders:
-- Title and description (as subtitle)
-- Context line: "Part of my work at {parentWorkTitle}" linking to `/work/{parentWork}` — only if `parentWork` is set
-- External link: "{externalUrl}" rendered as a text link with arrow icon — only if `externalUrl` is set
-- Metrics bar: up to 3 stat cards from `metrics` array — only if `metrics` is set and non-empty
+
+- **Context line** (top, above title): `text-xs uppercase tracking-widest text-[var(--muted)]` — "Part of my work at" followed by a link to `/work/{parentWork}` styled as `text-[var(--label-work)] hover:underline`. Only renders if `parentWork` is set.
+- **Title**: `text-4xl font-bold tracking-tight` (matches existing page titles)
+- **Subtitle** (description): `text-lg text-[var(--muted)] mt-2` (matches existing project description style)
+- **External link**: `text-sm text-[var(--label-project)] hover:underline mt-2` — rendered as "Visit {domain} →". Only renders if `externalUrl` is set.
+- **Metrics bar**: `grid grid-cols-2 md:grid-cols-3 gap-3 mt-8`. Each metric card: `bg-[var(--card)] rounded-lg p-4 text-center` with value as `text-2xl font-bold text-[var(--label-project)]` and label as `text-xs text-[var(--muted)] mt-1`. Only renders if `metrics` is set and non-empty. If 2 metrics, use `grid-cols-2` only.
+
+No cover image in ProjectHero — the new project pages lead with text and metrics, not imagery. Images are embedded in the MDX body where they serve the narrative.
 
 ### Project Footer Component (`src/components/project-footer.tsx`)
 
 Accepts `relatedProject`, `relatedProjectTitle` as props. Renders:
-- "Back to Projects" link to `/projects`
-- "Read about {relatedProjectTitle}" link to `/projects/{relatedProject}` — only if `relatedProject` is set
+
+- Container: `border-t border-[var(--border)] mt-16 pt-8 flex items-center justify-between` (matches site footer pattern)
+- "← Back to Projects" link: `text-sm text-[var(--muted)] hover:text-white transition-colors`
+- "Read about {relatedProjectTitle} →" link: `text-sm text-[var(--label-project)] hover:underline` — only renders if `relatedProject` is set
 
 ### Project Detail Page
 
