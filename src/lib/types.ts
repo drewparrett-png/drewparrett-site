@@ -13,8 +13,15 @@ export interface ProjectFrontmatter {
   description: string;
   cover: string;
   date: string;
-  tags: string[];
+  tags?: string[];
   featured: boolean;
+  // Rich project page fields (optional — CallFrame works without these)
+  parentWork?: string;
+  parentWorkTitle?: string;
+  externalUrl?: string;
+  metrics?: Array<{ value: string; label: string }>;
+  relatedProject?: string;
+  relatedProjectTitle?: string;
 }
 
 export interface PhotographyFrontmatter {
