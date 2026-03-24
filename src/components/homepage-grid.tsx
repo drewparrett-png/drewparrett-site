@@ -34,7 +34,7 @@ export function HomepageGrid({ items }: HomepageGridProps) {
             large
           />
         </div>
-        {rest.slice(0, 4).map((item) => {
+        {rest.slice(0, 5).map((item) => {
           const cfg = labelConfig[item.type];
           return (
             <ContentCard
