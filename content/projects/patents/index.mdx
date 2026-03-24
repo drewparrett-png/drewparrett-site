@@ -20,12 +20,16 @@ Industrial 3D vision is full of problems that look simple until you're building 
 
 Industrial cameras operate across wide temperature ranges — a camera might be installed in a freezer warehouse one day and a hot stamping line the next. As temperatures shift, most mounting materials expand or contract at different rates, causing optical elements to drift out of alignment. This patent covers a flexure-based positioning system that uses the structural properties of the mount itself to maintain precise alignment of imaging sensors and projection optics under thermal fluctuations and vibration — no motors, sensors, or active compensation required.
 
+![Patent figure — flexure-based optical positioning system](/content/projects/patents/patent-positioning-fig.png)
+
 ### Forming a Homogenized Illumination Line (Low-Speckle Laser)
 
 [U.S. Patent 11,314,100](https://patents.google.com/patent/US11314100B2) — Granted April 26, 2022
 [U.S. Patent 11,598,973](https://patents.google.com/patent/US11598973B2) — Granted March 7, 2023 (continuation)
 
 Structured light 3D cameras project laser patterns onto objects to reconstruct geometry, but lasers produce speckle — a grainy interference pattern that appears on the image sensor and degrades measurement accuracy. Higher laser power improves signal-to-noise ratio in principle, but typically makes speckle worse. These patents cover a method using laser technology combined with diffuser elements to create homogenized illumination lines, reducing speckle noise while simultaneously allowing higher power through the system — improving both image quality and measurement accuracy without additional hardware.
+
+![Patent figure — laser illumination and diffuser optical layout](/content/projects/patents/patent-speckle-fig.png)
 
 ### System and Method for 3D Scan of Moving Objects Longer than the Field of View
 
@@ -34,11 +38,15 @@ Structured light 3D cameras project laser patterns onto objects to reconstruct g
 
 Many 3D cameras capture multiple partial views that need to be combined into a single coherent point cloud — a process called stitching. Most stitching approaches are computationally expensive and assume a capable host processor. These patents cover a system designed to scan objects on conveyors that exceed the camera's field of view, stitching partial 3D scans in real time on the camera's own embedded hardware. The goal was to keep stitching on-device so the camera could output a finished measurement rather than offloading raw data to a host for post-processing.
 
+![Patent figure — 3D scanning system for objects exceeding field of view](/content/projects/patents/patent-stitching-fig.png)
+
 ### Composite Three-Dimensional Blob Tool
 
 [U.S. Patent 11,966,996](https://patents.google.com/patent/US11966996B2) — Granted April 23, 2024
 
 Point cloud data from 3D cameras is only useful if software can reliably identify and measure features within it. This patent covers a method for detecting and characterizing 3D blobs — discrete objects or features — in point cloud data, compositing measurements across multiple scans to improve robustness. The algorithm was developed for logistics applications where cameras need to dimension and characterize packages reliably at high throughput, even when objects vary widely in size, shape, and surface properties.
+
+![Patent figure — composite 3D blob detection system](/content/projects/patents/patent-blob-fig.png)
 
 ### Limited Angle X-Ray System
 
