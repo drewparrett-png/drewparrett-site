@@ -82,9 +82,9 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
       <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
-        Product Leader
+        Builder
         <br />
-        & Maker
+        & Product Leader
       </h1>
       <p className="mt-4 text-[var(--muted)] max-w-lg leading-relaxed">
         Products, teams, and go-to-market — from first prototype to first $10M.
