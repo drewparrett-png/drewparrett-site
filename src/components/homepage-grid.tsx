@@ -5,6 +5,7 @@ const labelConfig: Record<string, { label: string; color: string }> = {
   work: { label: "Work", color: "var(--label-work)" },
   project: { label: "Project", color: "var(--label-project)" },
   photography: { label: "Photography", color: "var(--label-photo)" },
+  about: { label: "About", color: "var(--muted)" },
 };
 
 interface HomepageGridProps {
@@ -34,7 +35,7 @@ export function HomepageGrid({ items }: HomepageGridProps) {
             large
           />
         </div>
-        {rest.slice(0, 7).map((item) => {
+        {rest.slice(0, 8).map((item) => {
           const cfg = labelConfig[item.type];
           return (
             <ContentCard

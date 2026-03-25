@@ -44,7 +44,7 @@ export interface ContentItem<T> {
 }
 
 export type FeaturedItem = {
-  type: "work" | "project" | "photography";
+  type: "work" | "project" | "photography" | "about";
   slug: string;
   title: string;
   subtitle?: string;

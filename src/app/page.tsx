@@ -64,6 +64,15 @@ function getFeaturedItems(): FeaturedItem[] {
   items.push(...others);
   items.push(...work.slice(1));
 
+  items.push({
+    type: "about" as const,
+    slug: "about",
+    title: "About",
+    description: "Product leader with an engineering foundation",
+    cover: "/content/about-cover.jpg",
+    href: "/about",
+  });
+
   return items;
 }
 
